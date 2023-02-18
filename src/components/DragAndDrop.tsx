@@ -8,7 +8,8 @@ export function DragAndDrop() {
     const props: UploadProps = {
         name: 'file',
         multiple: true,
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        action: 'http://localhost:3001/test2',
         onChange(info) {
             console.log(info)
             const status = info.file.status;

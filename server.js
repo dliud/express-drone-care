@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+let {PythonShell} = require('python-shell')
 
 app.use(session({ secret: 'secretKey', resave: false, saveUninitialized: false }));
 app.use(morgan('dev'));
@@ -25,6 +26,14 @@ app.get('/', function(req, res) {
 
 app.get('/test', function(req, res) {
   res.send('hello world!');
+});
+
+app.post('/test2', function(req, res) {
+  // console.log(req.)
+  PythonShell.run('parser.py', null).then(messages=>{
+    console.log('finished!');
+  });
+  res.send('hello world2!');
 });
 
 var server = app.listen(3001, function (error) {
