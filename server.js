@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-let {PythonShell} = require('python-shell')
+let { PythonShell } = require('python-shell')
 
 app.use(session({ secret: 'secretKey', resave: false, saveUninitialized: false }));
 app.use(morgan('dev'));
@@ -29,15 +29,17 @@ app.get('/test', function(req, res) {
 });
 
 app.post('/upload', function(req, res) {
+
+  console.log(req)
+
   let options = {
     pythonOptions: ['-u'], // get print results in real-time
   };
 
-  PythonShell.run('parser.py', options).then(messages=>{
-    console.log('finished!');
+  PythonShell.run('parser.py', options).then(messages => {
     console.log('results: %j', messages);
   });
-  res.send('hello world2!');
+  res.send("response")
 });
 
 var server = app.listen(3001, function (error) {
