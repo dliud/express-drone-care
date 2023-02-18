@@ -1,14 +1,26 @@
 import { InboxOutlined } from '@ant-design/icons';
-import { Button, UploadFile, UploadProps } from 'antd';
+import { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
 
 export function DragAndDrop() {
+    const endpoint = 'http://localhost:3001/upload'
+
     const props: UploadProps = {
         name: 'file',
-        multiple: true,
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        multiple: false,
+        action: endpoint,
+        // TODO (DL): I think we need to make a custom request
+        // customRequest: (data) => {
+        //     fetch(
+        //         endpoint, 
+        //         {
+        //             method: 'POST',
+        //             body: data.file,
+        //         }
+        //     )
+        // },
         onChange(info) {
             console.log(info)
             const status = info.file.status;
