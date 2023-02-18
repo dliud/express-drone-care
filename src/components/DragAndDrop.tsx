@@ -9,7 +9,7 @@ export function DragAndDrop() {
         name: 'file',
         multiple: true,
         // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        action: 'http://localhost:3001/test2',
+        action: 'http://localhost:3001/upload',
         onChange(info) {
             console.log(info)
             const status = info.file.status;
