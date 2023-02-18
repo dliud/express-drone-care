@@ -2,6 +2,17 @@ import { Typography } from 'antd';
 import React from 'react';
 import './App.css';
 import { DragAndDrop } from './components/DragAndDrop';
+import axios from 'axios';
+
+function handleClick() {
+  axios.get(`http://localhost:3001/test`)
+  .then((response) => {
+    console.log(response.data);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+}
 
 function App() {
   return (
@@ -14,6 +25,7 @@ function App() {
           
         <DragAndDrop/>
       </header>
+      <button onClick={handleClick}>server test</button>
     </div>
   );
 }
