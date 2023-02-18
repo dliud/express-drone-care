@@ -1,5 +1,5 @@
 import { InboxOutlined } from '@ant-design/icons';
-import type { UploadProps } from 'antd';
+import { Button, UploadFile, UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
@@ -8,7 +8,6 @@ export function DragAndDrop() {
     const props: UploadProps = {
         name: 'file',
         multiple: true,
-        // showUploadList: false,
         action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
         onChange(info) {
             console.log(info)
@@ -21,6 +20,9 @@ export function DragAndDrop() {
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
+        },
+        onDrop(e) {
+            console.log('Dropped files', e.dataTransfer.files);
         },
     };
       
