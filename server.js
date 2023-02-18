@@ -29,9 +29,13 @@ app.get('/test', function(req, res) {
 });
 
 app.post('/test2', function(req, res) {
-  // console.log(req.)
-  PythonShell.run('parser.py', null).then(messages=>{
+  let options = {
+    pythonOptions: ['-u'], // get print results in real-time
+  };
+
+  PythonShell.run('parser.py', options).then(messages=>{
     console.log('finished!');
+    console.log('results: %j', messages);
   });
   res.send('hello world2!');
 });
