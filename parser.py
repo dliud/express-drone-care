@@ -5,7 +5,7 @@ from PyPDF2 import PdfReader
 def normalize_text(text):
     return text.lower().replace(' ', '').replace('\n', '')
 
-precription_file = 'ian_example.pdf'
+precription_file = 'data/ian_example.pdf'
 reader = PdfReader(precription_file)
  
 
