@@ -28,7 +28,7 @@ app.get('/test', function(req, res) {
   res.send('hello world!');
 });
 
-app.post('/test2', function(req, res) {
+app.post('/upload', function(req, res) {
   let options = {
     pythonOptions: ['-u'], // get print results in real-time
   };
