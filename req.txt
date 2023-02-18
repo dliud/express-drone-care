@@ -1,0 +1,10 @@
+chatGPT==0.3.16
+greenlet==2.0.1
+markdown-it-py==2.1.0
+mdurl==0.1.2
+playwright==1.30.0
+pyee==9.0.4
+Pygments==2.14.0
+pypdf2==3.0.1
+rich==13.3.1
+typing-extensions==4.5.0
