@@ -8,12 +8,16 @@ from coordinates import get_lat_long_alt
 
 DEBUG = False
 VERBOSE = False
-name_query = "If the patient's name is available print it in brackets. Otherwise, print 'NAME NOT AVAILABLE' in brackets. Respond in a single line with an answer of the form [****]."
-test_query = "If any tests were ordered for the patient, list them in brackets, otherwise, print 'NO TESTS' in brackets. Respond in a single line with an answer of the form [****]."
-medicine_query = "If any new prescriptions were ordered for the patient, list them in brackets. Otherwise, print 'NO PRESCRIPTIONS' in brackets. Respond in a single line with an answer of the form [****]."
-address_query = "If the patient's address is available print it in brackets. Otherwise, print 'ADDRESS NOT AVAILABLE' in brackets. Respond in a single line with an answer of the form [****]."
 
-query = {'name': name_query, 'tests': test_query, 'medicine': medicine_query, 'address': address_query}
+launch_address = "550 Jane Stanford Way, Stanford, CA 94305"
+context_query = 'I will input a medical document and then ask you questions about it. I want you to respond to the questions I will ask with an answer enclosed in brackets. For example, what is 2 + 2? [4] Who was the first US president? [George Washington]'
+
+name_query = "What is the patient's name? If the name is not known, answer 'NAME NOT AVAILABLE'. Respond with an answer in brackets."
+test_query = "What medical tests were ordered for the patient? If no tests were listed, answer 'NO TESTS'. Respond with an answer in brackets."
+medicine_query = "What new prescriptions were ordered for the patient? If no prescriptions were ordered, answer 'NO PRESCRIPTIONS'. Respond with an answer in brackets."
+address_query = "What is the patient's address. If the address is not available, answer 'ADDRESS NOT AVAILABLE'. Respond with an answer in brackets."
+
+query = {'name': name_query, 'tests': test_query, 'medicine': medicine_query, 'delivery address': address_query}
     
 def contains_list(text):
     if '[' in text:
@@ -27,9 +31,12 @@ def get_cleaned_ans(text):
     end_index = text.index(']', start_index)
     return text[start_index+1:start_index+end_index].replace('[', '').replace(']', '')
 
+def relogin_error_message(text):
+    return 'Unusable response produced' in text
+
 def main():
-    precription_file = 'data/nathan_sti_test.pdf' #
-    #precription_file = 'data/address_demo.pdf'
+    #precription_file = 'data/address_demo.pdf' #
+    precription_file = 'data/ian_example.pdf'
     
     if VERBOSE:
         print("Reading visit summary file: ", precription_file)
@@ -43,24 +50,42 @@ def main():
     if VERBOSE:
         print('Querying ChatGPT to analyze file')
     answers = defaultdict(lambda: "")
-    for key in tqdm(['start'] + list(query)):
-        if key == 'start':
+    for key in tqdm(['start0', 'start1'] + list(query)):
+        if key == 'start0':
+            r = bot.ask(context_query)
+            if relogin_error_message(r):
+                print('ERROR: RELOGING TO CHATGPT')
+                return 
+            if DEBUG:
+                print(r)
+        elif key == 'start1':
             summary_response = bot.ask(joint_text)
+            if relogin_error_message(summary_response):
+                print('ERROR: RELOGING TO CHATGPT')
+                return 
             if DEBUG:
                 print(summary_response)
         else:
             while(not contains_list(answers[key])):
                 answers[key] = bot.ask(query[key])
+                if relogin_error_message(answers[key]):
+                    print('ERROR: RELOGING TO CHATGPT')
+                    return 
                 if DEBUG:
                     print(answers[key])
 
     for key in query:
         print(f'{key.upper()}: {get_cleaned_ans(answers[key])}')
     
-    if 'NOT' in get_cleaned_ans(answers[key]).upper():
+    delivery_address = get_cleaned_ans(answers['delivery address'])
+    if 'NOT' in delivery_address.upper():
         lat, long, alt = 0, 0, 0
     else:
-        lat, long, alt = get_lat_long_alt(get_cleaned_ans(answers['address']))
-    print(f'LATITUDE: {lat} LONGITUDE: {long} ALTITUDE (m): {alt}')
+        lat, long, alt = get_lat_long_alt(delivery_address)
+    print(f'DELIVERY INFO - LATITUDE: {lat} LONGITUDE: {long} ALTITUDE (m): {alt}')
+    print(f'LAUNCH ADDRESS: {launch_address}')
+    d_lat, d_long, d_alt = get_lat_long_alt(launch_address)
+    print(f'LAUNCH INFO - LATITUDE: {d_lat} LONGITUDE: {d_long} ALTITUDE (m): {d_alt}')
+    print(f"LANDING ALTITUDE ABOVE TAKEOFF (ATO) (m): {alt - d_alt})")
 if __name__ == "__main__":
     main()
