@@ -3,7 +3,10 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-let { PythonShell } = require('python-shell')
+let { PythonShell } = require('python-shell');
+const multer = require('multer');
+const upload = multer();
+const fs = require('fs');
 
 app.use(session({ secret: 'secretKey', resave: false, saveUninitialized: false }));
 app.use(morgan('dev'));
@@ -28,13 +31,14 @@ app.get('/test', function(req, res) {
   res.send('hello world!');
 });
 
-app.post('/upload', function(req, res) {
-
-  console.log(req)
+app.post('/upload', upload.single('file'), function(req, res) {
+  const file = req.file;
 
   let options = {
     pythonOptions: ['-u'], // get print results in real-time
   };
+
+  fs.writeFileSync("./data/upload.pdf", file.buffer);
 
   PythonShell.run('parser.py', options).then(messages => {
     console.log('results: %j', messages);
