@@ -11,16 +11,6 @@ export function DragAndDrop() {
         name: 'file',
         multiple: false,
         action: endpoint,
-        // TODO (DL): I think we need to make a custom request
-        // customRequest: (data) => {
-        //     fetch(
-        //         endpoint, 
-        //         {
-        //             method: 'POST',
-        //             body: data.file,
-        //         }
-        //     )
-        // },
         onChange(info) {
             console.log(info)
             const status = info.file.status;

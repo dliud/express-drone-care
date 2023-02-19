@@ -1,5 +1,5 @@
+import React, { useState } from "react";
 import { Typography } from 'antd';
-import React from 'react';
 import './App.css';
 import { DragAndDrop } from './components/DragAndDrop';
 import axios from 'axios';
@@ -14,7 +14,17 @@ function handleClick() {
   })
 }
 
+
+
 function App() {
+  const [file, setFile] = useState("");
+  const [fileName, setFileName] = useState("");
+
+  const saveFile = (e: any) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -22,10 +32,8 @@ function App() {
           Upload your patient log, and we'll deliver you the 
           care you need, right to your door.
         </Typography.Paragraph>
-          
         <DragAndDrop/>
       </header>
-      <button onClick={handleClick}>server test</button>
     </div>
   );
 }
