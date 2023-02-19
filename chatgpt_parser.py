@@ -31,12 +31,20 @@ def get_cleaned_ans(text):
     end_index = text.index(']', start_index)
     return text[start_index+1:start_index+end_index].replace('[', '').replace(']', '')
 
+def valid_answer(key, text):
+    if not contains_list(text):
+        return False
+    elif key == 'delivery address':
+        cleaned_ans = get_cleaned_ans(text)
+        return cleaned_ans[0].isdigit() or 'ADDRESS NOT AVAILABLE' in cleaned_ans
+    return True
+
 def relogin_error_message(text):
     return 'Unusable response produced' in text
 
 def main():
     #precription_file = 'data/address_demo.pdf' #
-    precription_file = 'data/ian_example.pdf'
+    precription_file = 'data/upload.pdf'
     
     if VERBOSE:
         print("Reading visit summary file: ", precription_file)
@@ -66,7 +74,7 @@ def main():
             if DEBUG:
                 print(summary_response)
         else:
-            while(not contains_list(answers[key])):
+            while(not valid_answer(key, answers[key])):
                 answers[key] = bot.ask(query[key])
                 if relogin_error_message(answers[key]):
                     print('ERROR: RELOGING TO CHATGPT')
@@ -82,10 +90,10 @@ def main():
         lat, long, alt = 0, 0, 0
     else:
         lat, long, alt = get_lat_long_alt(delivery_address)
-    print(f'DELIVERY INFO - LATITUDE: {lat} LONGITUDE: {long} ALTITUDE (m): {alt}')
+    print(f'DELIVERY INFO * LATITUDE: {lat} LONGITUDE: {long} ALTITUDE (m): {alt}')
     print(f'LAUNCH ADDRESS: {launch_address}')
     d_lat, d_long, d_alt = get_lat_long_alt(launch_address)
-    print(f'LAUNCH INFO - LATITUDE: {d_lat} LONGITUDE: {d_long} ALTITUDE (m): {d_alt}')
+    print(f'LAUNCH INFO * LATITUDE: {d_lat} LONGITUDE: {d_long} ALTITUDE (m): {d_alt}')
     print(f"LANDING ALTITUDE ABOVE TAKEOFF (ATO) (m): {alt - d_alt})")
 if __name__ == "__main__":
     main()

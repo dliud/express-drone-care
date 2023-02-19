@@ -1,8 +1,9 @@
-import { Button, Typography } from 'antd';
+import { Button, Typography, Card } from 'antd';
 import React, { useState } from 'react';
 import './App.css';
 import { DragAndDrop } from './components/DragAndDrop';
 import axios from 'axios';
+import background from "./img/healthcare.jpeg";
 
 function handleClick() {
   axios.get(`http://localhost:3001/test`)
@@ -31,15 +32,18 @@ function App() {
   const [prescriptions, setPrescriptions] = useState('');
   const [tests, setTests] = useState('');
   const [patientName, setPatientName] = useState('');
-  const [patientAddress, setPatientAddress] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [launchAddress, setLaunchAddress] = useState('');
+  const [deliveryInfo, setDeliveryInfo] = useState('');
+  const [launchInfo, setLaunchInfo] = useState('');
 
   return (
-    <div className="App">
+    <div style={{ textAlign: "center" }}>
       <header className="App-header">
         <Typography.Title >
           Express Drone Care
         </Typography.Title>
-        
+        <Card bordered={false}>
         {
           isFileUploaded ? 
           <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -51,19 +55,28 @@ function App() {
               <strong>Placed on: </strong> Saturday, Feb 18, 2023 at 9:30 PM
             </Typography.Text>
             <Typography.Title level={4}>
-              Your Drone
+              Your Drone Delivery Details
             </Typography.Title>
             <Typography.Text>
-              Dave
+              <strong>Drone Name: </strong>Dave
+            </Typography.Text>
+            <Typography.Text>
+            <strong> Launch Address: </strong> {launchAddress}
+            </Typography.Text>
+            <Typography.Text>
+            <strong> Launch Info: </strong> {launchInfo}
+            </Typography.Text>
+            <Typography.Text>
+            <strong> Delivery Address: </strong> {deliveryAddress}
+            </Typography.Text>
+            <Typography.Text>
+            <strong> Delivery Info: </strong> {deliveryInfo}
             </Typography.Text>
             <Typography.Title level={4}>
-              Delivery details
+              Parcel Details
             </Typography.Title>
             <Typography.Text>
             <strong> Patient Name: </strong> {patientName}
-            </Typography.Text>
-            <Typography.Text>
-            <strong> Address: </strong> {patientAddress}
             </Typography.Text>
             <Typography.Text>
               <strong> Prescriptions: </strong> {prescriptions}
@@ -92,9 +105,16 @@ function App() {
             <DragAndDrop 
               setIsFileUploaded={setIsFileUploaded} 
               setPrescription={setPrescriptions}
+              setTests={setTests}
+              setPatientName={setPatientName}
+              setDeliveryAddress={setDeliveryAddress}
+              setLaunchAddress={setLaunchAddress}
+              setDeliveryInfo={setDeliveryInfo}
+              setLaunchInfo={setLaunchInfo}
             />
           </div>
         }
+        </Card>
         
       </header>
     </div>

@@ -6,7 +6,13 @@ const { Dragger } = Upload;
 
 export function DragAndDrop({
     setIsFileUploaded,
-    setPrescription
+    setPrescription,
+    setTests,
+    setPatientName,
+    setDeliveryAddress,
+    setLaunchAddress,
+    setDeliveryInfo,
+    setLaunchInfo
 } : any) {
     const endpoint = 'http://localhost:3001/upload'
 
@@ -21,12 +27,15 @@ export function DragAndDrop({
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
+                let data = info.file.response;
                 setIsFileUploaded(true)
-                const text = info.file.response.slice(
-                    info.file.response.indexOf('[') + 1,
-                    info.file.response.indexOf(']'),
-                )
-                setPrescription(text)
+                setPrescription(data.prescriptions);
+                setTests(data.tests);
+                setPatientName(data.patientName);
+                setDeliveryAddress(data.deliveryAddress);
+                setLaunchAddress(data.launchAddress);
+                setLaunchInfo(data.launchInfo);
+                setDeliveryInfo(data.deliveryInfo)
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }

@@ -40,9 +40,26 @@ app.post('/upload', upload.single('file'), function(req, res) {
 
   fs.writeFileSync("./data/upload.pdf", file.buffer);
 
-  PythonShell.run('parser.py', options).then(messages => {
+  PythonShell.run('chatgpt_parser.py', options).then(messages => {
     console.log('results: %j', messages);
-    res.status(200).send(messages[0])
+    console.log('name: ', messages[0].split(':')[1])
+    console.log('tests: ', messages[1].split(':')[1])
+    console.log('medicine', messages[2].split(':')[1])
+    console.log('delivery_address: ', messages[3].split(':')[1])
+    console.log('delivery lat, long, alt: ', messages[4].split('*')[1])
+    console.log('launch_address: ', messages[5].split(':')[1])
+    console.log('launch lat, long, alt: ', messages[6].split('*')[1])
+
+    let data = {
+      patientName: messages[0].split(':')[1],
+      tests: messages[1].split(':')[1],
+      prescriptions: messages[2].split(':')[1],
+      deliveryAddress: messages[3].split(':')[1],
+      deliveryInfo: messages[4].split('*')[1],
+      launchAddress: messages[5].split(':')[1],
+      launchInfo: messages[6].split('*')[1]
+    }
+    res.end(JSON.stringify(data));
   });
 });
 
