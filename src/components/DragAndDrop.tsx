@@ -4,31 +4,29 @@ import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
 
-export function DragAndDrop() {
+export function DragAndDrop({
+    setIsFileUploaded,
+    setPrescription
+} : any) {
     const endpoint = 'http://localhost:3001/upload'
 
     const props: UploadProps = {
         name: 'file',
         multiple: false,
         action: endpoint,
-        // TODO (DL): I think we need to make a custom request
-        // customRequest: (data) => {
-        //     fetch(
-        //         endpoint, 
-        //         {
-        //             method: 'POST',
-        //             body: data.file,
-        //         }
-        //     )
-        // },
         onChange(info) {
-            console.log(info)
             const status = info.file.status;
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
+                setIsFileUploaded(true)
+                const text = info.file.response.slice(
+                    info.file.response.indexOf('[') + 1,
+                    info.file.response.indexOf(']'),
+                )
+                setPrescription(text)
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
