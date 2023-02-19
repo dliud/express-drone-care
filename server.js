@@ -42,8 +42,8 @@ app.post('/upload', upload.single('file'), function(req, res) {
 
   PythonShell.run('parser.py', options).then(messages => {
     console.log('results: %j', messages);
+    res.status(200).send(messages[0])
   });
-  res.send("response")
 });
 
 var server = app.listen(3001, function (error) {

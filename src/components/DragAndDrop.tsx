@@ -4,7 +4,10 @@ import { message, Upload } from 'antd';
 
 const { Dragger } = Upload;
 
-export function DragAndDrop() {
+export function DragAndDrop({
+    setIsFileUploaded,
+    setPrescription
+} : any) {
     const endpoint = 'http://localhost:3001/upload'
 
     const props: UploadProps = {
@@ -12,13 +15,18 @@ export function DragAndDrop() {
         multiple: false,
         action: endpoint,
         onChange(info) {
-            console.log(info)
             const status = info.file.status;
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
+                setIsFileUploaded(true)
+                const text = info.file.response.slice(
+                    info.file.response.indexOf('[') + 1,
+                    info.file.response.indexOf(']'),
+                )
+                setPrescription(text)
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
